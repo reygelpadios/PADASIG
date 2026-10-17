@@ -1,0 +1,19 @@
+{% extends 'accounts/base.html' %}
+{% load portal_labels %}
+{% block content %}
+<header class="screen-heading"><p class="eyebrow">{% label 'Hakbang 2 sa 2 • Privacy' 'Step 2 of 2 • Privacy' %}</p><h2 id="screen-title">{% label 'Ang inyong impormasyon' 'Your information' %}</h2><p>Data Privacy Act of 2012 (RA 10173)</p></header>
+<p class="notice">{% label 'Development draft lamang. Kailangang aprubahan ng OSCA ang abiso at batayang legal bago gumamit ng tunay na datos.' 'Development draft only. OSCA must approve this notice and its legal basis before using real data.' %}</p>
+<div class="privacy-copy">
+  <h3>{% label 'Ano ang gagamitin?' 'What information is used?' %}</h3>
+  <p>{% label 'Senior ID, pangalan, contact at profile details, at mga rekord ng benepisyong kinumpirma ng OSCA.' 'Your Senior ID, name, contact and profile details, and benefit records confirmed by OSCA.' %}</p>
+  <h3>{% label 'Para saan?' 'For what purpose?' %}</h3>
+  <p>{% label 'Para makapasok sa inyong account at makita ang sariling anunsiyo, status, iskedyul, at mga dokumentong dadalhin. Hindi nagpapasya ang portal kung sino ang kwalipikado.' 'To access your account and view your announcements, status, schedules, and required documents. The portal does not decide eligibility.' %}</p>
+  <h3>{% label 'Sino ang may access?' 'Who has access?' %}</h3>
+  <p>{% label 'Kayo at ang awtorisadong kawani ayon sa kanilang tungkulin. Hindi makikita ng ibang senior ang inyong rekord o ang listahan ng benepisyaryo.' 'You and authorized staff according to their duties. Other seniors cannot see your records or beneficiary lists.' %}</p>
+  <h3>{% label 'Mga tanong at pagwawasto' 'Questions and corrections' %}</h3>
+  <p>{% label 'Makipag-ugnayan sa OSCA Help Desk para sa access, pagwawasto, o mga tanong tungkol sa privacy. Ang tunay na contact, retention period, mga karapatan at proseso ay dapat kumpirmahin bago ilunsad.' 'Contact the OSCA Help Desk for access, corrections, or privacy questions. Actual contacts, retention periods, rights and procedures must be confirmed before launch.' %}</p>
+  <p>{% label 'Ang pagpayag dito ay pagtatala lamang ng inyong pagtanggap sa development notice. Hindi ito pahintulot para sa SMS o paggamit ng datos sa ibang layunin.' 'Agreeing records acceptance of this development notice only. It does not authorize SMS or unrelated uses of your data.' %}</p>
+</div>
+<form method="post">{% csrf_token %}<button class="button primary"><i data-lucide="check" aria-hidden="true"></i>{% label 'Nabasa ko at sumasang-ayon ako' 'I have read and agree' %}</button></form>
+{% include 'accounts/logout.html' %}
+{% endblock %}

@@ -1,0 +1,67 @@
+{% load static portal_labels %}
+<!doctype html>
+<html class="{% block page_class %}{% endblock %}" lang="{% block page_language %}{{ lang }}{% endblock %}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}PADASIG Portal{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{% static 'accounts/images/padasig.png' %}">
+  <link rel="stylesheet" href="{% static 'accounts/portal.css' %}">
+  <script src="{% static 'accounts/portal.js' %}" defer></script>
+</head>
+<body class="text-{{ text_size }}{% block body_class %}{% endblock %}" {% if senior %}data-session="true" data-idle="{{ idle_seconds }}"{% endif %}>
+  <a class="skip-link" href="#main">{% label 'Pumunta sa nilalaman' 'Skip to content' %}</a>
+  {% block page_controls %}{% endblock %}
+  <main id="main" class="auth-layout">
+    {% block branding %}
+    <section class="brand-section" aria-label="PADASIG Portal">
+      <div class="agency-logos">
+        <img class="padasig-logo" src="{% static 'accounts/images/padasig.png' %}" alt="PADASIG">
+        <img class="agency-seal" src="{% static 'accounts/images/osca.png' %}" alt="OSCA Pasig City">
+        <img class="agency-seal" src="{% static 'accounts/images/pension.png' %}" alt="Pasig City Local Senior Pension">
+      </div>
+      <div class="brand-copy">
+        <p class="eyebrow">{% label 'Para sa ating mga senior' 'For our senior citizens' %}</p>
+        <h1>PADASIG PORTAL</h1>
+        <p class="brand-subtitle">Pasig Digital Assistance &amp; Senior Income Gateway</p>
+        <p class="brand-message">{% label 'Serbisyong madaling maabot.' 'Support within your reach.' %}<br>{% label 'Impormasyong malinaw at maaasahan.' 'Clear information, every step of the way.' %}</p>
+      </div>
+      <div class="highlights">
+        <div><i data-lucide="contact-round" aria-hidden="true"></i><strong>{% label 'Madaling access' 'Easy access' %}</strong><span>{% label 'Gamit ang inyong Senior ID' 'With your Senior ID' %}</span></div>
+        <div><i data-lucide="shield-check" aria-hidden="true"></i><strong>{% label 'Pribadong account' 'Private account' %}</strong><span>{% label 'Para sa inyong impormasyon' 'For your personal information' %}</span></div>
+        <div><i data-lucide="hand-heart" aria-hidden="true"></i><strong>{% label 'Serbisyong may puso' 'Support with care' %}</strong><span>{% label 'Para sa ating mga senior' 'For our senior citizens' %}</span></div>
+      </div>
+      <p class="development-note">{% label 'Development lamang. Gumamit ng kathang-isip na datos.' 'Development only. Use fictional data.' %}</p>
+    </section>
+
+    {% endblock %}
+    <section class="auth-card" aria-labelledby="screen-title">
+      {% block card_header %}<div class="card-top">
+        <img src="{% static 'accounts/images/padasig.png' %}" alt="PADASIG" class="card-logo">
+        <form action="{% url 'accounts:language' %}" method="post" class="language-picker" aria-label="{% label 'Wika' 'Language' %}">
+          {% csrf_token %}
+          <input type="hidden" name="destination" value="{{ request.resolver_match.url_name }}">
+          <button name="language" value="fil" lang="fil" aria-pressed="{% if lang == 'fil' %}true{% else %}false{% endif %}">Filipino</button>
+          <button name="language" value="en" lang="en" aria-pressed="{% if lang == 'en' %}true{% else %}false{% endif %}">English</button>
+        </form>
+      </div>
+      {% endblock %}
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+  {% block footer %}<footer class="site-footer">
+    <span><i data-lucide="shield" aria-hidden="true"></i>{% label 'Ang inyong account ay para sa inyong impormasyon lamang.' 'Your account is for your personal information.' %}</span>
+    <span>{% label 'PADASIG • Para sa senior citizens' 'PADASIG • For senior citizens' %}</span>
+  </footer>{% endblock %}
+
+  {% if senior %}
+  <dialog id="idle-dialog" aria-labelledby="idle-title">
+    <h2 id="idle-title">{% label 'Narito pa ba kayo?' 'Are you still here?' %}</h2>
+    <p>{% label 'Para sa inyong seguridad, magla-log out sa' 'For your security, you will be signed out in' %} <strong id="idle-countdown">60</strong> {% label 'segundo.' 'seconds.' %}</p>
+    <button class="button primary" id="stay-signed-in" type="button">{% label 'Manatiling naka-log in' 'Stay signed in' %}</button>
+    <form action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button class="button secondary">{% label 'Mag-log out' 'Log out' %}</button></form>
+  </dialog>
+  {% endif %}
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+</body>
+</html>

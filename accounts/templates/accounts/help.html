@@ -1,0 +1,9 @@
+{% extends 'accounts/base.html' %}
+{% load portal_labels %}
+{% block content %}
+<header class="screen-heading"><p class="eyebrow">OSCA Help Desk</p><h2 id="screen-title">{% label 'Tulong sa inyong account' 'Help with your account' %}</h2><p>{% label 'Hindi kailangang gumawa ng bagong account.' 'You do not need to create a new account.' %}</p></header>
+<ol class="help-steps"><li>{% label 'Makipag-ugnayan sa OSCA Help Desk para sa tulong sa password.' 'Contact the OSCA Help Desk for password assistance.' %}</li><li>{% label 'Ihanda ang inyong Senior ID para sa beripikasyon ng kawani.' 'Have your Senior ID ready for staff verification.' %}</li><li>{% label 'Pagkatapos ng beripikasyon, magbibigay ang kawani ng paunang password. Papalitan ninyo ito sa susunod na pag-log in.' 'After verification, staff will provide a temporary password. You will replace it at your next login.' %}</li></ol>
+<p class="notice">{% label 'Huwag ibigay ang inyong kasalukuyang password. Walang SMS o awtomatikong password reset sa bersyong ito.' 'Do not share your current password. This version has no SMS or automatic password reset.' %}</p>
+{% include 'accounts/support.html' %}
+<a class="button secondary" href="{% url 'accounts:login' %}"><i data-lucide="arrow-left" aria-hidden="true"></i>{% label 'Bumalik sa pag-log in' 'Back to login' %}</a>
+{% endblock %}

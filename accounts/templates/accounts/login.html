@@ -1,0 +1,65 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% block page_language %}fil{% endblock %}
+{% block page_class %}login-document{% endblock %}
+{% block body_class %} login-page{% endblock %}
+{% block branding %}
+<section class="brand-section" aria-label="PADASIG Portal">
+  <div class="agency-logos">
+    <img src="{% static 'accounts/images/padasig-login.png' %}" alt="PADASIG">
+    <img src="{% static 'accounts/images/osca-login.png' %}" alt="OSCA Pasig City">
+    <img src="{% static 'accounts/images/pension-login.png' %}" alt="Pasig City Local Senior Pension">
+  </div>
+  <div class="brand-copy">
+    <h1>PADA<span>SIG</span> PORTAL</h1>
+    <p class="brand-subtitle">Tulong at impormasyon para sa mga senior ng Pasig</p>
+    <div class="brand-divider" aria-hidden="true"><i data-lucide="hand-heart"></i></div>
+    <p class="brand-message">Serbisyong madaling maabot.<br>Impormasyong malinaw at maaasahan.</p>
+  </div>
+  <div class="highlights">
+    <div><span class="feature-icon"><i data-lucide="contact-round" aria-hidden="true"></i></span><strong>Madaling access</strong><span>Gamit ang Senior ID</span></div>
+    <div><span class="feature-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span><strong>Pribadong account</strong><span>Protektado ang datos</span></div>
+    <div><span class="feature-icon"><i data-lucide="hand-heart" aria-hidden="true"></i></span><strong>Serbisyong may puso</strong><span>Para sa mga senior</span></div>
+  </div>
+</section>
+{% endblock %}
+{% block card_header %}
+<div class="login-card-brand"><span class="login-demo">DEMO</span><img src="{% static 'accounts/images/padasig-login.png' %}" alt="PADASIG" class="card-logo"></div>
+{% endblock %}
+{% block content %}
+<header class="screen-heading">
+  <span id="screen-title" hidden>PADASIG</span>
+  <div class="login-dot-divider" aria-hidden="true"><span></span></div>
+</header>
+{% if expired %}<p class="notice" role="status">Nag-expire ang inyong session. Mag-log in muli.</p>{% endif %}
+<!-- Local testing only: Senior ID 10001; initial demo password ChangeMe123! (unless changed). -->
+<form method="post" class="main-form" id="login-form">
+  {% csrf_token %}
+  <div class="field">
+    <div class="login-field-heading"><i data-lucide="contact-round" aria-hidden="true"></i><div><label for="senior-id">Senior Citizen ID Number</label><p id="id-hint" class="field-hint">Ilagay ang inyong Senior Citizen ID Number</p></div></div>
+    <input id="senior-id" name="senior_id" type="text" inputmode="numeric" pattern="[0-9]{5}" minlength="5" maxlength="5" autocomplete="username" aria-describedby="id-hint id-error" placeholder="Halimbawa: 10001" {% if error %}aria-invalid="true"{% endif %} required>
+    <p id="id-error" class="field-error" role="alert" hidden>Limang numero ang kailangan.</p>
+  </div>
+  <div class="field">
+    <div class="login-field-heading"><i data-lucide="lock-keyhole" aria-hidden="true"></i><div><label for="password">Password</label><p id="password-hint" class="field-hint">Ilagay ang inyong password</p></div></div>
+    <div class="password-field">
+      <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Password" aria-describedby="password-hint" {% if error %}aria-invalid="true"{% endif %} required>
+      <button type="button" class="password-toggle" data-password="password" aria-label="Ipakita ang password" data-show="Ipakita ang password" data-hide="Itago ang password" aria-pressed="false"><i data-lucide="eye" aria-hidden="true"></i></button>
+    </div>
+  </div>
+  <a class="forgot-link" href="{% url 'accounts:help' %}">Nakalimutan ang password?</a>
+  {% if error %}<div class="notice error login-error" role="alert">Mali ang Senior ID o password. Subukan muli.</div>{% endif %}
+  <button class="button primary login-submit" type="submit"><i data-lucide="log-in" aria-hidden="true"></i><span class="login-spinner" aria-hidden="true" hidden></span><span data-submit-label>PUMASOK</span></button>
+</form>
+<aside class="login-support"><i data-lucide="headset" aria-hidden="true"></i><div><strong>Kailangan ng Tulong?</strong><p>Tumawag sa OSCA Help Desk</p><p class="help-phone"><i data-lucide="phone" aria-hidden="true"></i><strong>{{ help_number|cut:' (placeholder)' }}</strong><span>(Placeholder lamang)</span></p><p>Unang beses? Gamitin ang account na ibinigay ng OSCA.</p></div></aside>
+<button class="mobile-help" type="button" id="open-login-help"><i data-lucide="headset" aria-hidden="true"></i>Kailangan ng tulong?</button>
+{% endblock %}
+{% block footer %}
+<footer class="login-footer">
+  <svg class="footer-wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10 C300 100 550 80 830 30 S1220 5 1440 40 V70 H0Z" fill="currentColor"/></svg>
+  <div class="footer-messages"><span><i data-lucide="shield-check" aria-hidden="true"></i>Ang inyong impormasyon ay ligtas at protektado.</span><span><i data-lucide="heart" aria-hidden="true"></i>Serbisyong para sa Senior Citizens ng Pasig City</span></div>
+  <div class="footer-development"><span>Development lamang. Gumamit ng kathang-isip na datos.</span><span aria-hidden="true">·</span><button type="button" class="privacy-link" id="open-privacy">Data Privacy Notice</button></div>
+</footer>
+<dialog id="login-help" aria-labelledby="help-title"><h2 id="help-title">Kailangan ng Tulong?</h2><p>Tumawag sa OSCA Help Desk</p><p><strong>{{ help_number|cut:' (placeholder)' }}</strong> (Placeholder lamang)</p><p>Unang beses? Gamitin ang account na ibinigay ng OSCA.</p><p>Development lamang. Gumamit ng kathang-isip na datos.</p><button class="text-button" type="button" id="help-privacy">Data Privacy Notice</button><form method="dialog"><button class="button primary">Isara</button></form></dialog>
+<dialog id="login-privacy" aria-labelledby="privacy-title"><h2 id="privacy-title">Data Privacy Notice</h2><p>Layunin ng PADASIG na sumunod sa Data Privacy Act of 2012 (RA 10173).</p><p>Pansamantalang abiso lamang ito para sa development. Hindi pa ito opisyal na abiso o garantiya ng pagsunod sa batas. Gumamit lamang ng kathang-isip na datos. Kailangang kumpirmahin ng OSCA ang batayang legal, proteksiyon, tagal ng pagtatago ng datos at opisyal na contact bago gamitin ang tunay na datos.</p><form method="dialog"><button class="button primary">Isara</button></form></dialog>
+{% endblock %}

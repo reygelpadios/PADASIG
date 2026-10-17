@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="fil">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="refresh" content="2;url={% url 'accounts:portal' %}">
+  <title>PADASIG Portal</title>
+  <link rel="preload" as="image" href="{% static 'accounts/images/padasig-login.png' %}">
+  <link rel="stylesheet" href="{% static 'accounts/portal.css' %}">
+  <script src="{% static 'accounts/portal.js' %}" defer></script>
+</head>
+<body class="loading-page">
+  <main id="login-loading" class="loading-overlay" data-destination="{% url 'accounts:portal' %}" role="status" aria-label="Binubuksan ang PADASIG Portal">
+    <div class="loading-logo" aria-hidden="true">
+      <img class="loading-base-logo" src="{% static 'accounts/images/padasig-login.png' %}" alt="">
+      <img class="loading-full-logo" src="{% static 'accounts/images/padasig-login.png' %}" alt="">
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,2 @@
+{% load portal_labels %}
+<form action="{% url 'accounts:logout' %}" method="post" class="logout-form">{% csrf_token %}<button class="text-button"><i data-lucide="log-out" aria-hidden="true"></i>{% label 'Mag-log out' 'Log out' %}</button></form>

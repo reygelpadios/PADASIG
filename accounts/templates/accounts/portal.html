@@ -1,0 +1,83 @@
+{% extends 'accounts/base.html' %}
+{% load static portal_labels %}
+{% block body_class %} portal-page{% endblock %}
+{% block branding %}{% endblock %}
+{% block card_header %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="portal-shell">
+  <aside class="portal-sidebar">
+    <a class="portal-brand" href="{% url 'accounts:portal' %}" aria-label="PADASIG Dashboard"><img src="{% static 'accounts/images/padasig.png' %}" alt="PADASIG"></a>
+    <nav class="portal-navigation" aria-label="{% label 'Pangunahing nabigasyon' 'Main navigation' %}">
+      <a class="active" aria-current="page" href="{% url 'accounts:portal' %}"><i data-lucide="house" aria-hidden="true"></i><span><strong>{% label 'Aking Biyaya' 'Dashboard' %}</strong><small>{% label 'Dashboard' 'Aking Biyaya' %}</small></span></a>
+      <span class="nav-upcoming"><i data-lucide="files" aria-hidden="true"></i><span><strong>{% label 'Mga Kailangang Dalhin' 'Documents' %}</strong><small>{% label 'Susunod na yugto' 'Coming later' %}</small></span></span>
+      <span class="nav-upcoming"><i data-lucide="megaphone" aria-hidden="true"></i><span><strong>{% label 'Mga Anunsiyo' 'Announcements' %}</strong><small>{% label 'Susunod na yugto' 'Coming later' %}</small></span></span>
+      <span class="nav-upcoming"><i data-lucide="user-round" aria-hidden="true"></i><span><strong>{% label 'Aking Impormasyon' 'Profile' %}</strong><small>{% label 'Susunod na yugto' 'Coming later' %}</small></span></span>
+      <span class="nav-upcoming"><i data-lucide="circle-help" aria-hidden="true"></i><span><strong>{% label 'Tulong at Suporta' 'Help & Support' %}</strong><small>{% label 'Susunod na yugto' 'Coming later' %}</small></span></span>
+    </nav>
+  </aside>
+  <div class="portal-workspace">
+    <header class="portal-header">
+      <div class="portal-identity">
+        <div class="portal-avatar" aria-hidden="true"><i data-lucide="user-round"></i></div>
+        <div><p>{% label 'Maligayang pagdating,' 'Welcome,' %}</p><h1 id="screen-title">{{ senior.full_name }}</h1><p>Senior ID: {{ senior.senior_id }}</p></div>
+        <form action="{% url 'accounts:logout' %}" method="post" class="portal-logout">{% csrf_token %}<button class="button secondary"><i data-lucide="log-out" aria-hidden="true"></i>{% label 'Mag-log out' 'Log out' %}</button></form>
+      </div>
+      <div class="portal-preferences">
+        <form action="{% url 'accounts:text_size' %}" method="post" class="portal-setting">{% csrf_token %}<span>{% label 'Laki ng letra' 'Text size' %}</span><div class="portal-options" role="group" aria-label="{% label 'Laki ng letra' 'Text size' %}">
+          <button name="text_size" value="normal" aria-pressed="{% if text_size == 'normal' %}true{% else %}false{% endif %}">{% if text_size == 'normal' %}✓ {% endif %}{% label 'Karaniwan' 'Normal' %}</button>
+          <button name="text_size" value="large" aria-pressed="{% if text_size == 'large' %}true{% else %}false{% endif %}">{% if text_size == 'large' %}✓ {% endif %}{% label 'Malaki' 'Large' %}</button>
+          <button name="text_size" value="xlarge" aria-pressed="{% if text_size == 'xlarge' %}true{% else %}false{% endif %}">{% if text_size == 'xlarge' %}✓ {% endif %}{% label 'Pinakamalaki' 'Extra large' %}</button>
+        </div></form>
+        <form action="{% url 'accounts:language' %}" method="post" class="portal-setting">{% csrf_token %}<input type="hidden" name="destination" value="portal"><span>{% label 'Wika' 'Language' %}</span><div class="portal-options" role="group" aria-label="{% label 'Wika' 'Language' %}">
+          <button name="language" value="fil" aria-pressed="{% if lang == 'fil' %}true{% else %}false{% endif %}">{% if lang == 'fil' %}✓ {% endif %}Filipino</button>
+          <button name="language" value="en" aria-pressed="{% if lang == 'en' %}true{% else %}false{% endif %}">{% if lang == 'en' %}✓ {% endif %}English</button>
+        </div></form>
+      </div>
+    </header>
+    {% if demo %}<p class="portal-demo"><strong>DEMO</strong> {% label 'Kathang-isip na datos lamang.' 'Fictional data only.' %}</p>{% endif %}
+    <div class="portal-columns">
+      <section class="portal-feed" aria-labelledby="feed-heading">
+        <h2 id="feed-heading">{% label 'Mga bagong anunsiyo' 'Latest announcements' %}</h2>
+        {% if latest_post %}
+        <article class="portal-panel announcement-panel">
+          <div class="portal-panel-title"><span class="portal-icon"><i data-lucide="megaphone" aria-hidden="true"></i></span><div><strong>OSCA</strong><small>{{ latest_post.publish_date|date:"F j, Y" }}</small></div></div>
+          <h3>{{ latest_post.title }}</h3><p>{{ latest_post.body }}</p>
+          <div class="post-banner"><strong>{{ latest_post.benefit.name }}</strong>{% if latest_post.payout_date %}<span>{{ latest_post.payout_date|date:"F j, Y" }}</span>{% endif %}{% if latest_post.venue %}<span>{{ latest_post.venue }}</span>{% endif %}</div>
+          <p class="post-note">{% label 'Pampublikong anunsiyo lamang. Hindi ito patunay ng pagkakasama.' 'This is a public announcement, not proof of inclusion.' %}</p>
+        </article>
+        {% else %}<div class="portal-panel portal-empty"><i data-lucide="inbox" aria-hidden="true"></i><p>{% label 'Wala pang nailathalang anunsiyo.' 'There are no published announcements yet.' %}</p></div>{% endif %}
+      </section>
+      <section class="portal-benefits" aria-labelledby="benefits-heading">
+        <h2 id="benefits-heading">{% label 'Buod ng benepisyo' 'Benefit overview' %}</h2>
+        {% if benefits %}
+          {% for item in benefits %}
+          <article class="portal-panel benefit-panel">
+            <div class="portal-panel-title"><span class="portal-icon"><i data-lucide="clipboard-check" aria-hidden="true"></i></span><div><h3>{{ item.post.benefit.name }}</h3><small>{{ item.post.title }}</small></div></div>
+            <div class="benefit-status">
+              {% if item.record %}
+                {% if item.record.status == 'included' %}<span class="status-word included"><i data-lucide="circle-check" aria-hidden="true"></i>{% label 'Kasama sa talaan' 'Included in the list' %}</span>
+                {% elif item.record.status == 'pending' %}<span class="status-word pending"><i data-lucide="clock-3" aria-hidden="true"></i>{% label 'Naghihintay ng kumpirmasyon' 'Pending confirmation' %}</span>
+                {% elif item.record.status == 'claimed' %}<span class="status-word claimed"><i data-lucide="badge-check" aria-hidden="true"></i>{% label 'Nakuha na' 'Claimed' %}</span>{% endif %}
+                <small>Updated by OSCA on {{ item.record.updated_at|date:"F j, Y" }}.</small>
+              {% else %}<span class="status-word absent"><i data-lucide="circle-help" aria-hidden="true"></i>{% label 'Walang tala ng pagkakasama' 'No inclusion record' %}</span><strong>{% label 'Makipag-ugnayan sa OSCA.' 'Please contact OSCA.' %}</strong>{% endif %}
+            </div>
+            {% if item.record and item.record.status != 'pending' %}
+            <dl class="payout-grid">
+              <div><dt>{% label 'Petsa' 'Date' %}</dt><dd>{{ item.post.payout_date|date:"F j, Y" }}</dd></div>
+              <div><dt>{% label 'Oras' 'Time' %}</dt><dd>{% if item.post.payout_start_time %}{{ item.post.payout_start_time|time:"g:i A" }}–{{ item.post.payout_end_time|time:"g:i A" }}{% else %}{% label 'Tingnan ang anunsiyo' 'See announcement' %}{% endif %}</dd></div>
+              <div><dt>{% label 'Lugar' 'Venue' %}</dt><dd>{{ item.post.venue|default:"—" }}</dd></div>
+              <div><dt>{% label 'Halaga' 'Amount' %}</dt><dd>{% if item.post.amount is not None %}₱{{ item.post.amount|floatformat:2 }}{% else %}—{% endif %}</dd></div>
+            </dl>
+            {% if item.documents or item.proxy_documents %}<div class="portal-requirements"><h4>{% label 'Mga kailangang dalhin' 'Documents to bring' %}</h4>{% if item.documents %}<ul>{% for document in item.documents %}<li>{{ document }}</li>{% endfor %}</ul>{% endif %}{% if item.proxy_documents %}<strong>{% label 'Kung proxy ang kukuha' 'If a proxy will claim' %}</strong><ul>{% for document in item.proxy_documents %}<li>{{ document }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
+            {% endif %}
+            <div class="portal-next"><strong>{% label 'Susunod na hakbang' 'Next step' %}</strong>{% if not item.record %}<span>{% label 'Makipag-ugnayan sa OSCA.' 'Please contact OSCA.' %}</span>{% elif item.record.status == 'pending' %}<span>{% label 'Hintayin ang update ng OSCA.' 'Wait for an OSCA update.' %}</span>{% elif item.record.status == 'claimed' %}<span>{% label 'Naitala na ang pagkuha.' 'Claiming has been recorded.' %}</span>{% elif item.days_until == 0 %}<span>{% label 'Ngayon ang araw ng pagkuha.' 'Payout is today.' %}</span>{% else %}<span>{% label 'Araw bago ang pagkuha:' 'Days until payout:' %} {{ item.days_until }}</span>{% endif %}</div>
+          </article>
+          {% endfor %}
+        {% else %}<div class="portal-panel portal-empty"><i data-lucide="calendar-x" aria-hidden="true"></i><p>{% label 'Walang aktibong benepisyo sa ngayon. Tingnan ang mga bagong anunsiyo.' 'No active benefits right now. Check the latest announcements.' %}</p></div>{% endif %}
+      </section>
+    </div>
+    <nav class="portal-mobile-nav" aria-label="{% label 'Pangunahing nabigasyon' 'Main navigation' %}"><a href="{% url 'accounts:portal' %}" aria-current="page"><i data-lucide="house" aria-hidden="true"></i>{% label 'Biyaya' 'Home' %}</a><span><i data-lucide="files" aria-hidden="true"></i>{% label 'Dokumento' 'Docs' %}</span><span><i data-lucide="megaphone" aria-hidden="true"></i>{% label 'Anunsiyo' 'News' %}</span><span><i data-lucide="user-round" aria-hidden="true"></i>Profile</span><span><i data-lucide="circle-help" aria-hidden="true"></i>{% label 'Tulong' 'Help' %}</span></nav>
+  </div>
+</div>
+{% endblock %}
